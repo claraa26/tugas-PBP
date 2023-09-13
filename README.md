@@ -96,7 +96,7 @@ Pada djanggo penggunaan virtual environment sangatlah berguna, karena pengguna d
   Model merupakan komponen yang bertanggungjawab dalam mengatur dan mengola data aplikasi<br/>
   View komponen yang menangani logika presentasi dalam konsep MVT<br/>
   Template merupakan komponen yang berfungsi untuk mengatur tampilan pengguna<br/>
-## MVVM (Model-View-ViewModel)
+### MVVM (Model-View-ViewModel)
   Model berisi data dan logika bisnis<br/>
   View menangani tampilan<br/>
   ViewModel merupakan penghubung antara model dan view<br/>
