@@ -166,15 +166,15 @@ urlpatterns = [
 ```
 ## Screenshot Postman
 #### HTML
-![HTML](image\html.png)
+![HTML](image/html.png)
 #### JSON
-![JSON](image\json.png)
+![JSON](image/json.png)
 #### JSON_ID
-![JSON_ID](image\json_id.png)
+![JSON_ID](image/json_id.png)
 #### XML
-![XML](image\xml.png)
+![XML](image/xml.png)
 #### XML_ID
-![XML_ID](image\xml_id.png)
+![XML_ID](image/xml_id.png)
 
 <details>
 <summary> <b> Tugas 2 </b> </summary>
