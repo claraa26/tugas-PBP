@@ -1,8 +1,183 @@
-# tugas2-PBP 
+# tugas3-PBP 
 Nama  : Clara Sista Widhiastuti <br/>
 NPM   : 2206825782 <br/>
 Kelas : PBP-E <br/>
 
+## Perbedaan form POST dan form GET
+
+| **Pembeda** | ```POST``` | ```GET``` |
+|:--:|--|--|
+|**Fungsi**|Mengirimkan data ke server|Mengambil data dari server|
+|**History**|Isi atau nilai dari form tidak ditampilkan di URL|Isi atau nilai dari form dapat dilihat langsung pada URL
+|**Kegunaan**|Pengiriman data tertutup dan data bersifat sensitif (*username* dan *password*)|Menampilkan id pada penggunaan database
+
+## Perbedaan XML, JSON, HTML dalam pengiriman data
+| ```XML``` | ```JSON``` |```HTML```
+|--|--|--|
+|Didesain untuk mendeskripsikan serta mentransfer data. Data harus berupa string dan tidak mendukung array|Didesain untuk mendeskripsikan serta mentransfer data menggunakan bahasa yang mudah dimengerti. Dapat mengakses array.|Didesain untuk menampilkan data dan bagaimana penampakan data tersebut.|
+|case sensitive|case sensitive|case nsensitive
+|Menggunakan tag|Menggunakan pasangan key dan value|Menggunakan tag|
+
+## JSON sering digunakan dalam pertukaran data antara aplikasi web modern
+Alasan JSON sering digunakan untuk pertukaran data adalah:
+1.  Ukuran file JSON lebih kecil dibanding format lain seperti XML
+2. JSON memiliki struktur kode yang sederhana sehingga mudah dibaca serta dimengerti oleh manusia.
+3. Dapat digunakan dengan berbagai jenis bahasa, Hal tersebut membuatnya menjadi lebih fleksible. 
+
+## Implementasi data delivery
+1. Membuat berkas baru dengan nama ```forms.py``` pada direktori ```main``` kemudian tambahkan kode dibawah ini
+```
+from django.forms import ModelForm
+from main.models import Product
+
+class ProductForm(ModelForm):
+    class Meta:
+        model = Product
+        fields = ["name", "amount", "description"]
+```
+2. pada folder ```main``` buka berkas ```views.py``` tambahkan import dan fungsi baru create_ product untuk menerim data seperti berikut
+```
+from django.http import HttpResponseRedirect
+from main.forms import ProductForm
+from django.urls import reverse
+```
+```
+def create_product(request):
+    form = ProductForm(request.POST or None)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "create_product.html", context)
+```
+3. Agar kita dapat menampilkan/mengembalikan data maka perlu mengubah fungsi ```show_main``` pada berkas ```views.py``` seperti kode dibawah ini
+```
+def show_main(request):
+    products = Product.objects.all()
+
+    context = {
+        'name': 'Clara Sista Widhiastuti', 
+        'class': 'PBP E', 
+        'products': products
+    }
+
+    return render(request, "main.html", context)
+```
+4. Buka direktori ```main/templates```, kemudian buat berkas baru dengan nama ```create_product.html``` isi dengan kode dibawah ini
+```
+{% extends 'base.html' %} 
+
+{% block content %}
+<h1>Add New Product</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" value="Add Product"/>
+            </td>
+        </tr>
+    </table>
+</form>
+
+{% endblock %}
+```
+5. menampilkan ```data``` ke dalam bentuk table dan menambahkan tombol ```Add New Product``` dengan menambahkan kode berikut pada berkas ```main.html```
+```
+...
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Description</th>
+        <th>Date Added</th>
+    </tr>
+
+    {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
+
+    {% for product in products %}
+        <tr>
+            <td>{{product.name}}</td>
+            <td>{{product.price}}</td>
+            <td>{{product.description}}</td>
+            <td>{{product.date_added}}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+<br />
+
+<a href="{% url 'main:create_product' %}">
+    <button>
+        Add New Product
+    </button>
+</a>
+
+{% endblock content %}
+```
+---
+membuat fungsi views JSON dan XML pada berkas ```views.py``` di direktori ```main```
+1. menambahkan import ```HttpResponse``` dan ```Serializer```
+```
+from django.http import HttpResponse
+from django.core import serializers
+```
+2. membuat variabel yang dapat menyimpan hasil query dari semua data dalam masing masing fungsi 
+```
+def show_xml(request):
+    data = Product.objects.all()
+    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
+
+def show_json(request):
+    data = Product.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+```
+3. Untuk mengembalikan data berdasarkan ID dalam bentuk XML dan JSON maka kita perlu membuat fungsi ```show_xml_id``` dan ```show_json_by_id```
+```
+def show_xml_by_id(request, id):
+    data = Product.objects.filter(pk=id)
+    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
+def show_json_by_id(request, id):
+    data = Product.objects.filter(pk=id)
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+```
+---
+Routing URL
+1. pada direktori ```main``` buka berkas ```urls.py``` tambahkan import fungsi XML dan JSON
+```
+from main.views import show_main, create_product, show_xml, show_json, show_xml_by_id, show_json_by_id 
+```
+2. Tambahkan path url ke dalam ```urlpatterns```
+```
+...
+urlpatterns = [
+    path('', show_main, name='show_main'),
+    path('create-product', create_product, name='create_product'),
+    path('xml/', show_xml, name='show_xml'),
+    path('json/', show_json, name='show_json'), 
+    path('xml/<int:id>/', show_xml_by_id, name='show_xml_by_id'),
+    path('json/<int:id>/', show_json_by_id, name='show_json_by_id'),
+]
+```
+## Screenshot Postman
+#### HTML
+![HTML](image\html.png)
+#### JSON
+![JSON](image\json.png)
+#### JSON_ID
+![JSON_ID](image\json_id.png)
+#### XML
+![XML](image\xml.png)
+#### XML_ID
+![XML_ID](image\xml_id.png)
+
+<details>
+<summary> <b> Tugas 2 </b> </summary>
 ## Proses pembuatan app django
 1. Membuat Direktori Repository<br/>
    Membuat direktori baru yaitu **tugas_PBP**, kemudian pada github membuat repository baru yang judulnya sama dengan direktori
