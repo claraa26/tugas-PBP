@@ -2,11 +2,18 @@
 
 {% block content %}
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bimble-Online Page</title>
-</head>
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid ">
+            <div class="mx-auto p-2" style="width: 200px;">
+                <span class="navbar-brand mb-0 h1">Bimble Online Page</span>
+            </div>
+        </div>
+        <form class="container-fluid justify-content-end">
+            <a href="{% url 'main:logout' %}">
+                <button class="btn btn-outline-success me-2" type="button">Logout</button>
+            </a>
+        </form>
+    </nav>
 
 <body>
     <div class="app_name">
@@ -22,16 +29,18 @@
     </div>
     
     <table class="table">
-        <tr>
-            <th>Name</th>
-            <th>Amount</th>
-            <th>Description</th>
-            <th>Date Added</th>
-        </tr>
-    
+        <thead></thead>
+            <tr>
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Description</th>
+                <th>Date Added</th>
+            </tr>
+        </thead>
         {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
     
         {% for product in products %}
+        <tbody>
             <tr>
                 <td>{{product.name}}</td>
                 <td>{{product.amount}}</td>
@@ -50,6 +59,7 @@
                     </a>
                 </td>
             </tr>
+        </tbody>
         {% endfor %}
     </table>
     
@@ -61,12 +71,6 @@
         </button>
     </a>
     <h5>Sesi terakhir login: {{ last_login }}</h5>
-    <a href="{% url 'main:logout' %}">
-        <button>
-            Logout
-        </button>
-    </a>
-
 </body>
 </html>
 {% endblock content %}

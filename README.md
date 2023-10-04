@@ -1,8 +1,81 @@
-# tugas4-PBP 
+# tugas5-PBP 
 Nama  : Clara Sista Widhiastuti <br/>
 NPM   : 2206825782 <br/>
 Kelas : PBP-E <br/>
 
+
+## Manfaat Element Selector
+CSS selector merupakan suatu aturan yang digunakan untuk menemukan (menyeleksi) HMTL element untuk diberikan suatu style.
+
+Element  selector merupakan salah satu jenis dari CSS selector. Selector ini memilih elemen HMTL berdasarkan nama tagnya
+
+sebagai contoh elemn selector pada tag p
+```
+p {
+  text-align: center;
+  color: blue;
+}
+```
+maka semua elemen p akan rata tengah dan teks bewarna biru
+
+## HTML5 tag
+| HTML5 tag     | Deskripsi |
+|-------------  |----------|
+|```<article>```| Mendefinisikan sebuah artikel                                     |
+|```<body>```   | Mendefinisikan isi dokumen                                        |
+|```<div>```    | Menentukan bagian atau divisi dalam dokumen                       |
+|```<footer>``` | Mendefinisikan footer pada dokumen atau bagian                    |
+|```<nav>```    | Mendefinisikan bagian tautan navigasi                             |
+|```<section>```| Mendefinisikan bagian pada dokumen, seperti header, footer, dll   |
+|```<table>```  | Mendefinisikan tabel data                                         |
+|```<td>```     | Mendefinisikan sel dalam tabel                                    |
+|```<th>```     | Mendefinisikan sel header dalam sebuah tabel                      |
+|```<tr>```     | Mendefinisikan baris dalam tabel                                  |
+|```<video>```  | Menyematkan konten video dalam dokumen HTML                       |
+
+## Margin vs Padding
+**Margin** merupakan ruang kosong di luar border yang membatasi elemen HTML
+
+**Padding** Merupakan ruang kosong di bagian dalam border
+
+## *Framework* CSS Tailwind vs Bootstrap
+|Pembeda| *Framework* CSS Tailwind | Bootstrap|
+|--|--|--|
+|Design| Pada tailwind untuk merancang tampilan perlu menggabungkan class utilitas yang lebih kecil menjadi suatu yang kompleks. |Bootstrap memiliki komponen yang sudah dirancang dengan tampilan yang terstruktur dan konsisten. Hal tersebut cocok untuk pemula dan proyek dengan desain sederhana karena mudah digunakan|
+|Fleksibilitas| Tailwind menganut pendekatan utility-first sehingga memiliki fleksibilitas yang lebih besar karena memungkinkan untuk kita membuat design kustom|Bootstrap menawarkan kerangka kerja yang relatif terstruktur dengan banyak komponen yang telah dirancang sebelumnya. Ini memberikan stabilitas dan kemudahan penggunaan, tetapi mungkin memiliki batasan dalam hal fleksibilitas desain yang unik.
+Ukuran file| Ukuran file dari tailwind tergantung pada banyaknya class utilitas yang digunakan| Ukuran file pada bootstap cenderung besar karena banyak fitur yang siap pakai yang tersedia|
+
+## Implementasi Design Web menggunakan HTML, CSS dan framework CSS
+1. menambahkan bootstrap ke aplikasi serta bootstrap css dan js
+menambahkan tag ```<meta name="viewport">``` pada berkas ```base.html``` agar tampilan web dapat menyesuaikan ukuran perangkat mobile
+```
+<head>
+    {% block meta %}
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% endblock meta %}
+</head>
+```
+```
+<head>
+    {% block meta %}
+        ...
+    {% endblock meta %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+```
+```
+<head>
+    ...
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+J4jsl5c9zdLKaUk5Ae5f5b1bw6AUn5f5v8FZJoMxm6f5cH1" crossorigin="anonymous"></script>
+</head>
+```
+2. Menambahkan navbar pada aplikasi
+Cara menambahkan navbar dengan [dokumentasi berikut](https://getbootstrap.com/docs/5.3/components/navbar/)
+3. Styling halaman sesuai dengan keinginan
+
+<details>
+<summary> <b> Tugas 4 </b> </summary>
 
 ## Pengertian Django UserCreationForm, dan kelebihan dan kekurangannya
 ### Pengertian
@@ -266,6 +339,7 @@ Menambahkan kode berikut pada berkas ```main.html``` pada folde ```main/template
 <h5>Sesi terakhir login: {{ last_login }}</h5>
 ...
 ```
+</details>
 
 <details>
 <summary> <b> Tugas 3 </b> </summary>
@@ -544,4 +618,4 @@ Pada djanggo penggunaan virtual environment sangatlah berguna, karena pengguna d
   View menangani tampilan<br/>
   ViewModel merupakan penghubung antara model dan view<br/>
 Perbedaan dari ketinganya adalah bagaimana cara menghubungkan antar komponen. Pada MVC, controller berperan sebagai penghubung model dan view. Pada MVT, template berperan sebagai penghubung model dan view. Sedangkan pada MVVM, ViewModel yang berperan sebagai penghubung antara model dan view.
-
+</details>
