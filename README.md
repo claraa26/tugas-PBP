@@ -72,7 +72,7 @@ menambahkan tag ```<meta name="viewport">``` pada berkas ```base.html``` agar ta
 ```
 2. Menambahkan navbar pada aplikasi
 Cara menambahkan navbar dengan [dokumentasi berikut](https://getbootstrap.com/docs/5.3/components/navbar/)
-3. Styling halaman sesuai dengan keinginan
+3. Styling halaman sesuai dengan keinginan dengan mengatur warna background
 
 <details>
 <summary> <b> Tugas 4 </b> </summary>
