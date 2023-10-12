@@ -1,8 +1,167 @@
-# tugas5-PBP 
+# tugas6-PBP 
 Nama  : Clara Sista Widhiastuti <br/>
 NPM   : 2206825782 <br/>
 Kelas : PBP-E <br/>
 
+## *Asynchronous Programming* vs *Synchronous Programming*
+Berikut perbedaan antara *asynchronous rogramming* dengan *synchronous programming* :
+| Pembeda | *Asynchronous Programming* | *Synchronous Programming* |
+| -- | -- | -- |
+| Proses eksekusi | Program dapat dijalankan secara bersamaan tanpa terkait secara langsung dan tanpa menunggu antrian | Program harus dijalankan satu-persatu sesuai dengan urutan atau prioritas, sehingga operasi yang sedang berjalan menghalangi proses operasi lainnya.
+| Waktu eksekusi | Cenderung berjalan lebih cepat karena setiap operasi tidak perlu menunggu operasi lainnya | Waktu yang digunakan lebih lama karena masing-masing operasi harus menunggu operasi lainnya selesai. |
+
+## Penerapan Paradigma *Event-Driven Programming*
+Paradigma pemrograman event-driven merupakan paradigma pemrograman yang mana alur program di tentukan oleh suatu tindakan atau suatu event. 
+
+#### Contoh penerapannya pada tugas ini
+* Ketika terjadi event pengeklikan tombol ```add product```, maka event listener akan merespon dengan menjalankan fungsi ```addProduct()```.
+* Untuk mendapat product yang telah ditambahkan dengan merefresh halaman secara asynchronous (bukan merefresh halaman keseluruhan) maka perlu adanya fungsi ```refreshProducts()``` yang dipanggil setelah ```addProduct()```.
+
+## Penerapan *Asynchronous Programming* pada AJAX.
+Pada umumnya, AJAX memungkinkan aplikasi web mengirimkan dan menerima data dari server tanpa harus mereload keseluruhan halaman. Penerapan *asynchronous programming* pada AJAX memungkinkan aplikasi web untuk memproses setiap request dari server. 
+
+## Fetch API vs Library jQuery
+Berikut perbedaan penggunaan Fetch API dengan library jQuery:
+
+| Fetch API | Library jQuery |
+| -- | -- |
+| Dapat melakukan request HTTP menggunakan sintaks yang lebih sederhana dan mudah dibaca | jQuery adalah sebuah library JavaScript yang menyediakan fungsi AJAX, sehingga penggunaan jQuery memerlukan library jQuery|
+| Memungkinkan untuk menangani respons asinkron dengan lebih mudah| Fitur-fitur yang di sediakan jauh lebih lengkap|
+
+## Implementasi AJAX
+Buka berkas ```views.py``` pada direktori ```main``` 
+* Buat fungsi untuk mengembalikan data JSON yang nantinya digunakan untuk menampilkan data product.
+```
+def get_product_json(request):
+    product_item = Product.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize('json', product_item))
+```
+
+* Menambahkan fungsi untuk menambahkan product dengan AJAX. Import ```from django.views.decorators.csrf import csrf_exempt```. Kemudian tambahkan fungsi berikut:
+```
+@csrf_exempt
+def add_product_ajax(request):
+    if request.method == 'POST':
+        name = request.POST.get("name")
+        amount = request.POST.get("amount")
+        description = request.POST.get("description")
+        user = request.user
+
+        new_product = Product(name=name, amount=amount, description=description, user=user)
+        new_product.save()
+
+        return HttpResponse(b"CREATED", status=201)
+
+    return HttpResponseNotFound()
+```
+
+Buka berkas ```urls.py``` pada direktori ```main```
+* Tambahkan routing fungsi yang telah dibuat sebelumnya. Import fungsi ```get_product_json``` dan ```add_product_ajax```. Kemudian tambahkan *path url* ke *urlpatterns*
+```
+path('get-product/', get_product_json, name='get_product_json'),
+path('create-product-ajax/', add_product_ajax, name='add_product_ajax'),
+```
+
+Buka berkas ```main.html``` pada direktori ```main/templates```
+* Menampilkan data product dengan ```Fetch()``` API. Ganti table sebelumnya menjadi ```<table id="product_table" class="table table-bordered"></table>```. 
+* Buat block ```<Script>``` dan buat fungsi ```getProducts()```
+```
+<script>
+    async function getProducts() {
+        return fetch("{% url 'main:get_product_json' %}").then((res) => res.json())
+    }
+</script>
+```
+* Tambahkan fungsi ```refreshProducts()``` yang digunakan untuk merefresh product secara ```asynchronous```
+
+``` 
+<script>
+    async function refreshProducts() {
+        document.getElementById("product_table").innerHTML = ""
+        const products = await getProducts()
+        let htmlString = `<tr>
+            <th>Name</th>
+            <th>Amount</th>
+            <th>Description</th>
+            <th>Date Added</th>
+        </tr>`
+        products.forEach((item) => {
+            htmlString += `\n<tr>
+            <td>${item.fields.name}</td>
+            <td>${item.fields.amount}</td>
+            <td>${item.fields.description}</td>
+            <td>${item.fields.date_added}</td>
+        </tr>` 
+        })
+        
+        document.getElementById("product_table").innerHTML = htmlString
+    }
+
+    refreshProducts()
+</script>
+```
+* Menerapkan modal bootstrap sebagai form untuk menambahkan produk
+```
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Product</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form" onsubmit="return false;">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="name" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="name" name="name"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="amount" class="col-form-label">Amount:</label>
+                        <input type="number" class="form-control" id="amount" name="amount"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="col-form-label">Description:</label>
+                        <textarea class="form-control" id="description" name="description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Product</button>
+            </div>
+        </div>
+    </div>
+</div>
+```
+* Menambahkan button ```add product``` pada bagian navbar
+```
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Product</button>
+```
+* Menambahkan data product dengan AJAX dengan membuat fungsi ```addProduct()``` pada block ```<Script>```
+```
+<script>
+    ...
+    function addProduct() {
+        fetch("{% url 'main:add_product_ajax' %}", {
+            method: "POST",
+            body: new FormData(document.querySelector('#form'))
+        }).then(refreshProducts)
+
+        document.getElementById("form").reset()
+        return false
+    }
+</script>
+```
+* Menambahkan fungsi ```onclick``` pada button "Add Product" pada modal untuk menjalankan fungsi ```addProduct()```
+```
+<script>
+...
+document.getElementById("button_add").onclick = addProduct
+</script>
+```
+<details>
+<summary> <b> Tugas 5 </b> </summary>
 
 ## Manfaat Element Selector
 CSS selector merupakan suatu aturan yang digunakan untuk menemukan (menyeleksi) HMTL element untuk diberikan suatu style.
@@ -73,6 +232,7 @@ menambahkan tag ```<meta name="viewport">``` pada berkas ```base.html``` agar ta
 2. Menambahkan navbar pada aplikasi
 Cara menambahkan navbar dengan [dokumentasi berikut](https://getbootstrap.com/docs/5.3/components/navbar/)
 3. Styling halaman sesuai dengan keinginan dengan mengatur warna background
+</details>
 
 <details>
 <summary> <b> Tugas 4 </b> </summary>
@@ -520,6 +680,7 @@ urlpatterns = [
 
 <details>
 <summary> <b> Tugas 2 </b> </summary>
+
 ## Proses pembuatan app django
 1. Membuat Direktori Repository<br/>
    Membuat direktori baru yaitu **tugas_PBP**, kemudian pada github membuat repository baru yang judulnya sama dengan direktori
