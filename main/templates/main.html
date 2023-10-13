@@ -35,7 +35,27 @@
         {% endfor %}
     </ul>
 
-    <table id="product_table" class="table table-bordered"></table>
+    <!-- <table id="product_table" class="table table-bordered"></table> -->
+    <div class="row"></div>
+        {% for product in products %}
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description }}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Amount: {{ product.amount }}</li>
+                    <li class="list-group-item">Date Added: {{ product.date_added }}</li>
+                </ul>
+                <div class="card-body">
+                    <a href="{% url 'main:edit_product' product.pk %}" class="card-link">Edit</a>
+                    <a href="{% url 'main:delete_product' product.pk %}" class="card-link">Delete</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
     
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
