@@ -36,7 +36,7 @@
     </ul>
 
     <!-- <table id="product_table" class="table table-bordered"></table> -->
-    <div class="row"></div>
+    <div id="product_table" class="row">
         {% for product in products %}
         <div class="col-md-4">
             <div class="card mb-4">
@@ -47,7 +47,7 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Amount: {{ product.amount }}</li>
                     <li class="list-group-item">Date Added: {{ product.date_added }}</li>
-                </ul>
+                </ul>   
                 <div class="card-body">
                     <a href="{% url 'main:edit_product' product.pk %}" class="card-link">Edit</a>
                     <a href="{% url 'main:delete_product' product.pk %}" class="card-link">Delete</a>
@@ -142,20 +142,18 @@
         async function refreshProducts() {
             document.getElementById("product_table").innerHTML = ""
             const products = await getProducts()
-            let htmlString = `<tr>
-                <th>Name</th>
-                <th>Amount</th>
-                <th>Description</th>
-                <th>Date Added</th>
-            </tr>`
+            let htmlString = '';
             products.forEach((item) => {
-                htmlString += `\n<tr>
-                <td>${item.fields.name}</td>
-                <td>${item.fields.amount}</td>
-                <td>${item.fields.description}</td>
-                <td>${item.fields.date_added}</td>
-            </tr>` 
-            })
+                htmlString += `
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">${item.fields.name}</h5>
+                        <p class="card-text">${item.fields.description}</p>
+                        <p class="card-text">Amount: ${item.fields.amount}</p>
+                        <p class="card-text">Category: ${item.fields.date_added}</p>
+                    </div>
+                </div>`;
+            });
             
             document.getElementById("product_table").innerHTML = htmlString
         }
