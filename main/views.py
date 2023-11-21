@@ -40,22 +40,27 @@ def create_product(request):
     context = {'form': form}
     return render(request, "create_product.html", context)
 
+@csrf_exempt
 def show_xml(request):
     data = Product.objects.all()
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
 
+@csrf_exempt
 def show_json(request):
     data = Product.objects.all()
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
+@csrf_exempt
 def show_xml_by_id(request, id):
     data = Product.objects.filter(pk=id)
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
 
+@csrf_exempt
 def show_json_by_id(request, id):
     data = Product.objects.filter(pk=id)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
+@csrf_exempt
 def register(request):
     form = UserCreationForm()
 
@@ -68,6 +73,7 @@ def register(request):
     context = {'form':form}
     return render(request, 'register.html', context)
 
+@csrf_exempt
 def login_user(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -83,6 +89,7 @@ def login_user(request):
     context = {}
     return render(request, 'login.html', context)
 
+@csrf_exempt
 def logout_user(request):
     logout(request)
     response = HttpResponseRedirect(reverse('main:login'))
