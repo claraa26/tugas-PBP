@@ -147,9 +147,9 @@ def create_product_flutter(request):
 
         new_product = Product.objects.create(
             user = request.user,
-            judul = data["judul"],
-            episode = int(data["episode"]),
-            sinopsis = data["sinopsis"]
+            name = data["name"],
+            amount = int(data["amount"]),
+            description = data["description"]
         )
 
         new_product.save()
